@@ -22,9 +22,19 @@ namespace GestorTareasAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DTOTasksSalida>>> GetTasks()
+        public async Task<ActionResult<IEnumerable<DTOTasksSalida>>> GetTasks([FromQuery] string? status = null)
         {
+            if(status != "completada" && status != "en progreso" && status != "pendiente")
+            {
+                status = null;
+            }
+
             var result = await _tasksService.GetAllTasksAsync();
+            
+            if (!string.IsNullOrEmpty(status))
+            {
+                result = result.Where(t => t.Estado == status);
+            }
             return Ok(result);
         }
 

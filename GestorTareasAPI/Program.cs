@@ -15,7 +15,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<GestorTareasDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ITasksService, TasksService>(); //Trabajo evaluativo no pide interfaz, borrar si asi lo desea.
-builder.Services.AddScoped<IUsersService, UsersService>(); //Trabajo evaluativo no pide interfaz, borrar si asi lo desea.
 
 var app = builder.Build();
 

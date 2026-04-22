@@ -2,15 +2,14 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace GestorTareasAPI.Models;
 
 public partial class Users
 {
     public string Id { get; set; }
-
     public string Nombre { get; set; }
-
     public string Email { get; set; }
 
     public DateTime FechaDeCreacion { get; set; }

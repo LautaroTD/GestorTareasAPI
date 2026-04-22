@@ -23,7 +23,8 @@ namespace GestorTareasAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DTOTasksSalida>>> GetTasks([FromQuery] string? status = null)
         {
-            if(status != "completada" && status != "en progreso" && status != "pendiente")
+            //verificar que el estado sea valido, si no lo es, se ignora el filtro
+            if (status != "completada" && status != "en progreso" && status != "pendiente")
             {
                 status = null;
             }
@@ -40,6 +41,7 @@ namespace GestorTareasAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DTOTasksSalida>> GetTaskById(string id)
         {
+            //verificacion de string
             if (string.IsNullOrWhiteSpace(id))
             {
                 return BadRequest();
@@ -81,6 +83,11 @@ namespace GestorTareasAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateTask(string id, DTOTasksEntrada task)
         {
+            if(string.IsNullOrEmpty(id) || !ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var result = await _tasksService.UpdateTasksAsync(id, task);
 
             if (!result.Success && result.Error == "400")
@@ -102,7 +109,8 @@ namespace GestorTareasAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTask(string id)
         {
-            if(string.IsNullOrEmpty(id))
+            //verificacion de string
+            if (string.IsNullOrEmpty(id))
             {
                 return BadRequest();
             }

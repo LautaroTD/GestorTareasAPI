@@ -16,6 +16,16 @@ builder.Services.AddDbContext<GestorTareasDBContext>(options => options.UseSqlSe
 
 builder.Services.AddScoped<ITasksService, TasksService>(); //Trabajo evaluativo no pide interfaz, borrar si asi lo desea.
 
+//politica de CORS para permitir solicitudes desde cualquier origen, método y encabezado
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll"); //politica CORS
 
 app.UseAuthorization();
 

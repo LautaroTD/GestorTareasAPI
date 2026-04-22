@@ -35,6 +35,11 @@ namespace GestorTareasAPI.Services
 
         public async Task<DTOTasksSalida> GetTasksByIdAsync(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return new DTOTasksSalida { id = "000" }; //BadRequest (imposible que una tarea tenga esa Id porque las Ids usan GUID).
+            }
+
             var task = await _context.Tasks.FindAsync(id);
             if (task == null)
             {
@@ -102,6 +107,11 @@ namespace GestorTareasAPI.Services
 
         public async Task<Result> UpdateTasksAsync(string id, DTOTasksEntrada task)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return Result.Fail("400"); //BadRequest
+            }
+
             Result resultado = await ComprobacionInternaDeDTOTaskEntrada(task);
 
             if(!resultado.Success)
@@ -133,6 +143,36 @@ namespace GestorTareasAPI.Services
             return Result.Ok();
         }
 
+        public async Task<Result> DeleteTasksAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return Result.Fail("400"); //BadRequest
+            }
+
+            var taskExistente = await _context.Tasks.FindAsync(id);
+
+            if (taskExistente is null)
+            {
+                return Result.Fail("500"); //InternalError (accesible a traves de la UI, deberia solo ser posible borrar una tarea si existe).
+            }
+
+            _context.Tasks.Remove(taskExistente);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error al eliminar la tarea de Id: {id}");
+                return Result.Fail("500"); //InternalError
+            }
+
+            return Result.Ok();
+        }
+
+
         private async Task<Result> ComprobacionInternaDeDTOTaskEntrada(DTOTasksEntrada task)
         {
             if (string.IsNullOrWhiteSpace(task.Titulo) || string.IsNullOrWhiteSpace(task.Descripcion) || string.IsNullOrEmpty(task.Estado))
@@ -158,5 +198,6 @@ namespace GestorTareasAPI.Services
             return Result.Ok();
         }
 
-    } //<- Nota Para si: a veces InteliCode se come los } al generar codigo.
+
+    } 
 }

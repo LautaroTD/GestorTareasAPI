@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using GestorTareasAPI.DTO;
 using GestorTareasAPI.Interfaces;
 using GestorTareasAPI.Models;
-using GestorTareasAPI.DTO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GestorTareasAPI.Controllers
 {
@@ -30,18 +31,26 @@ namespace GestorTareasAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DTOTasksSalida>> GetTaskById(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest();
+            }
+
             var result = await _tasksService.GetTasksByIdAsync(id);
             if (result == null)
             {
                 return NotFound();
+            } else if(result.id == "000")
+            {
+                return BadRequest();
             }
-            return Ok(result);
+                return Ok(result);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateTask(DTOTasksEntrada task)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -50,14 +59,14 @@ namespace GestorTareasAPI.Controllers
             if (!result.Success && result.Error == "400")
             {
                 return BadRequest();
-            } else if(result.Error == "500")
+            } else if (result.Error == "500")
             {
                 return StatusCode(500);
             } else if (!result.Success)
             {
                 return BadRequest(result.Error); //General por si el programa crece
             }
-                return Ok();
+            return Ok();
         }
 
         [HttpPut("{id}")]
@@ -80,6 +89,33 @@ namespace GestorTareasAPI.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTask(string id)
+        {
+            if(string.IsNullOrEmpty(id))
+            {
+                return BadRequest();
+            }
+
+            var result = await _tasksService.DeleteTasksAsync(id);
+
+            if (!result.Success && result.Error == "400")
+            {
+                return BadRequest();
+            }
+            else if (result.Error == "500")
+            {
+                return StatusCode(500);
+            }
+            else if (!result.Success)
+            {
+                return BadRequest(result.Error); //General por si el programa crece
+            }
+
+            return Ok();
+        }
+
 
     }
 }

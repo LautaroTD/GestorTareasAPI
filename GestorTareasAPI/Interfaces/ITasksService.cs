@@ -9,7 +9,7 @@ namespace GestorTareasAPI.Interfaces
         Task<IEnumerable<DTOTasksSalida>> GetAllTasksAsync();
         Task<DTOTasksSalida> GetTasksByIdAsync(string id);
         Task<Result> CreateTasksAsync(DTOTasksEntrada task);
-        //Task<Result> UpdateTasksAsync(string id, DTOTasksEntrada task);
+        Task<Result> UpdateTasksAsync(string id, DTOTasksEntrada task);
         //Task<Result> DeleteTasksAsync(string id);
     }
 }

@@ -41,6 +41,11 @@ namespace GestorTareasAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateTask(DTOTasksEntrada task)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var result = await _tasksService.CreateTasksAsync(task);
             if (!result.Success && result.Error == "400")
             {
@@ -54,5 +59,27 @@ namespace GestorTareasAPI.Controllers
             }
                 return Ok();
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateTask(string id, DTOTasksEntrada task)
+        {
+            var result = await _tasksService.UpdateTasksAsync(id, task);
+
+            if (!result.Success && result.Error == "400")
+            {
+                return BadRequest();
+            }
+            else if (result.Error == "500")
+            {
+                return StatusCode(500);
+            }
+            else if (!result.Success)
+            {
+                return BadRequest(result.Error); //General por si el programa crece
+            }
+
+            return Ok();
+        }
+
     }
 }

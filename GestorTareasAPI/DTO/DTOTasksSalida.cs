@@ -2,6 +2,8 @@
 {
     public class DTOTasksSalida
     {
+        //IdUsuarioNavigation fue descartado por ser irrelevante para el frontend
+        public string id { get; set; }
         public string Titulo { get; set; }
 
         public string Descripcion { get; set; }

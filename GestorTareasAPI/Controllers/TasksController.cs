@@ -26,7 +26,33 @@ namespace GestorTareasAPI.Controllers
             var result = await _tasksService.GetAllTasksAsync();
             return Ok(result);
         }
-        
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<DTOTasksSalida>> GetTaskById(string id)
+        {
+            var result = await _tasksService.GetTasksByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateTask(DTOTasksEntrada task)
+        {
+            var result = await _tasksService.CreateTasksAsync(task);
+            if (!result.Success && result.Error == "400")
+            {
+                return BadRequest();
+            } else if(result.Error == "500")
+            {
+                return StatusCode(500);
+            } else if (!result.Success)
+            {
+                return BadRequest(result.Error); //General por si el programa crece
+            }
+                return Ok();
+        }
     }
 }

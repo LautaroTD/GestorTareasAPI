@@ -36,6 +36,7 @@ namespace GestorTareasAPI.Controllers
             Users user = new Users();
             user.Nombre = nombre;
 
+            //Comprobacion en loop para evitar problemas de ID repetida
             do
             {
                 var nuevaId = Guid.NewGuid().ToString();

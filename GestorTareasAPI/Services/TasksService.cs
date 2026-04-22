@@ -35,6 +35,7 @@ namespace GestorTareasAPI.Services
 
         public async Task<DTOTasksSalida> GetTasksByIdAsync(string id)
         {
+            //verificacion de string
             if (string.IsNullOrWhiteSpace(id))
             {
                 return new DTOTasksSalida { id = "000" }; //BadRequest (imposible que una tarea tenga esa Id porque las Ids usan GUID).
@@ -76,6 +77,7 @@ namespace GestorTareasAPI.Services
                 FechaDeCreacion = DateTime.UtcNow
             };
 
+            //Comprobacion en loop para evitar problemas de ID repetida
             do
             {
                 var nuevaId = Guid.NewGuid().ToString();
@@ -145,6 +147,7 @@ namespace GestorTareasAPI.Services
 
         public async Task<Result> DeleteTasksAsync(string id)
         {
+            //verificacion de string
             if (string.IsNullOrWhiteSpace(id))
             {
                 return Result.Fail("400"); //BadRequest
@@ -175,21 +178,25 @@ namespace GestorTareasAPI.Services
 
         private async Task<Result> ComprobacionInternaDeDTOTaskEntrada(DTOTasksEntrada task)
         {
+            //verificacion de string
             if (string.IsNullOrWhiteSpace(task.Titulo) || string.IsNullOrWhiteSpace(task.Descripcion) || string.IsNullOrEmpty(task.Estado))
             {
                 return Result.Fail("400"); //BadRequest
             }
 
+            //verificacion de exceso de tamaño
             if (task.Titulo.Length > 100 || task.Descripcion.Length > 300 || task.IdUsuario.Length > 300)
             {
                 return Result.Fail("400"); //BadRequest
             }
 
+            //verificacion de valores validos en status
             if (task.Estado != "pendiente" && task.Estado != "en progreso" && task.Estado != "completada")
             {
                 return Result.Fail("400"); //InternalError (el estado es impuesto por la UI, deberia llegar dentro de los parametros acotados)
             }
 
+            //verificacion de usuario valido
             if (!await _context.Users.AnyAsync(u => u.Id == task.IdUsuario))
             {
                 return Result.Fail("500"); //BadRequest (la Id de usuario es un dato autoimpuesto, no depende del usuario, deberia llegar siempre a la api)

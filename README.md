@@ -2,6 +2,8 @@ Backend de GestorTareas, proyecto evaluativo.
 Lautaro Tamborini Dalmasso
 Plantilla Usada: ASP.NET Core Web API
 
+Ejecutar API: Abra la solucion con Visual Studio y pulse en el boton 'Run" arriba en la interfaz de Visual Studio, deberia abrirse uno de sus navegadores con la pagina de Swagger. Para cambiar de navegador, vaya al boton "Run" y pulse en la flecha hacia abajo que se encuentra justo al a derecha del boton, pegado a este, luego vaya a "Explorador Web" y elija su explorador de preferencia.
+
 API del proyecto evaluativo, testeado con Swagger.
 CRUD más Filtrado por Estado en metodo GetTasks y GetAll, Delete y Create de Users.
 ConnectionString: "Server=DESKTOP-LIIBE0D\\MSSQL2022;Database=GestorTareasDB;Trusted_Connection=true;Encrypt=false;MultipleActiveResultSets=true;TrustServerCertificate=True;"

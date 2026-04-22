@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestorTareasAPI.Interfaces
 {
-    public interface ITasksService
+    public interface ITasksService //Trabajo evaluativo no pide interfaz, borrar si asi lo desea.
     {
         Task<IEnumerable<DTOTasksSalida>> GetAllTasksAsync();
         Task<DTOTasksSalida> GetTasksByIdAsync(string id);

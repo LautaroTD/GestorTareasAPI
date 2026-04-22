@@ -11,9 +11,8 @@ namespace GestorTareasAPI.Controllers
     [Route("api/[controller]")]
     public class TasksController : ControllerBase
     {
-
         private readonly GestorTareasDBContext _context;
-        private readonly ITasksService _tasksService;
+        private readonly ITasksService _tasksService; //Trabajo evaluativo no pide interfaz, borrar si asi lo desea.
 
         public TasksController(GestorTareasDBContext context, ITasksService tasksService)
         {
